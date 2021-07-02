@@ -5,8 +5,26 @@ class Quiz extends Component {
     super(props);
 
     this.state = {
-      timeRemaining: 60,
+      timeRemaining: 5,
+      gameOver: false,
     };
+  }
+
+  componentDidMount() {
+    const timerTick = () => {
+      if (this.state.timeRemaining === 0) {
+        clearInterval(timer);
+        this.setState({
+          gameOver: true,
+        });
+      } else {
+        this.setState({
+          timeRemaining: this.state.timeRemaining - 1,
+        });
+      }
+    };
+
+    const timer = setInterval(timerTick, 1000);
   }
 
   render() {
