@@ -39,8 +39,10 @@ class Quiz extends Component {
     super(props);
 
     this.state = {
-      timeRemaining: 5,
+      timeRemaining: 60,
       gameOver: false,
+      currentQuestionIndex: 0,
+      questions,
     };
   }
 
@@ -61,18 +63,39 @@ class Quiz extends Component {
     const timer = setInterval(timerTick, 1000);
   }
 
+  checkAnswer = () => {
+    if (this.state.currentQuestionIndex < this.state.questions.length - 1) {
+      this.setState({
+        currentQuestionIndex: this.state.currentQuestionIndex + 1,
+      });
+    } else {
+      this.setState({
+        gameOver: true,
+      });
+    }
+  };
+
   render() {
+    const { timeRemaining, gameOver, currentQuestionIndex } = this.state;
+
+    const question = questions[currentQuestionIndex];
+
     return (
       <div className="position-absolute top-50 start-50 translate-middle quiz-container w-75">
         <div className="card">
           <div className="card-header text-center py-4">
-            <h3>Time Remaining: {this.state.timeRemaining}</h3>
+            <h3>Time Remaining: {timeRemaining}</h3>
           </div>
           <div className="card-body text-center">
-            <QuestionAnswer
-              question={questions[0].title}
-              options={questions[0].options}
-            />
+            {gameOver ? (
+              <h1>GAME OVER</h1>
+            ) : (
+              <QuestionAnswer
+                question={question.title}
+                options={question.options}
+                checkAnswer={this.checkAnswer}
+              />
+            )}
           </div>
         </div>
       </div>
