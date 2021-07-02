@@ -1,6 +1,10 @@
 import "./App.css";
 
 const App = () => {
+  const startQuiz = () => {
+    console.log("start quiz");
+  };
+
   return (
     <div>
       <div className="jumbotron text-center">
@@ -8,7 +12,9 @@ const App = () => {
       </div>
 
       <div className="position-absolute top-50 start-50 translate-middle start-quiz-container">
-        <button className="btn btn-success">START</button>
+        <button className="btn btn-success" onClick={startQuiz}>
+          START
+        </button>
       </div>
     </div>
   );
