@@ -8,19 +8,16 @@ const questions = [
     options: ["const", "set", "let", "var"],
     answer: "set",
   },
-
   {
     title: "JavaScript variables are usually written in which type of case?",
     options: ["lowercase", "UPPERCASE", "camelCase", "CapitalCase"],
     answer: "camelCase",
   },
-
   {
     title: "Object properties are made up of pairs of keys and _____?",
     options: ["values", "properties", "variables", "arrays"],
     answer: "values",
   },
-
   {
     title:
       "What do we call the values received by a function when it is invoked?",
@@ -39,10 +36,12 @@ class Quiz extends Component {
     super(props);
 
     this.state = {
-      timeRemaining: 60,
+      timeRemaining: questions.length * 10,
       gameOver: false,
       currentQuestionIndex: 0,
       questions,
+      score: 0,
+      displayError: false,
     };
   }
 
@@ -63,20 +62,38 @@ class Quiz extends Component {
     const timer = setInterval(timerTick, 1000);
   }
 
-  checkAnswer = () => {
-    if (this.state.currentQuestionIndex < this.state.questions.length - 1) {
-      this.setState({
-        currentQuestionIndex: this.state.currentQuestionIndex + 1,
-      });
+  checkAnswer = (event) => {
+    const selectedOption = event.target.getAttribute("data-option");
+    const currentAnswer =
+      this.state.questions[this.state.currentQuestionIndex].answer;
+
+    const isCorrect = selectedOption === currentAnswer;
+    // 4
+
+    if (this.state.currentQuestionIndex <= this.state.questions.length - 1) {
+      if (isCorrect) {
+        this.setState({
+          currentQuestionIndex: this.state.currentQuestionIndex + 1,
+          score: this.state.score + 1,
+          displayError: false,
+        });
+      } else {
+        this.setState({
+          displayError: true,
+        });
+      }
     } else {
       this.setState({
         gameOver: true,
+        timeRemaining: 0,
+        displayError: false,
       });
     }
   };
 
   render() {
-    const { timeRemaining, gameOver, currentQuestionIndex } = this.state;
+    const { timeRemaining, gameOver, currentQuestionIndex, displayError } =
+      this.state;
 
     const question = questions[currentQuestionIndex];
 
@@ -85,6 +102,9 @@ class Quiz extends Component {
         <div className="card">
           <div className="card-header text-center py-4">
             <h3>Time Remaining: {timeRemaining}</h3>
+            <h4>
+              Score: {this.state.score} / {this.state.questions.length}
+            </h4>
           </div>
           <div className="card-body text-center">
             {gameOver ? (
@@ -97,6 +117,11 @@ class Quiz extends Component {
               />
             )}
           </div>
+          {displayError && (
+            <div class="alert alert-danger" role="alert">
+              Incorrect, please try again!!
+            </div>
+          )}
         </div>
       </div>
     );
