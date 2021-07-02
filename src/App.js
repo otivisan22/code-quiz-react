@@ -11,7 +11,9 @@ class App extends Component {
   }
 
   startQuiz = () => {
-    console.log("start quiz");
+    this.setState({
+      showStartContainer: false,
+    });
   };
 
   render() {
